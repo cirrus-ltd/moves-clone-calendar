@@ -1,0 +1,7 @@
+CREATE TABLE rate_calendar (
+    id DATE PRIMARY KEY,
+    version INT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    rate INT
+);
