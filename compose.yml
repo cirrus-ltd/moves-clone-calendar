@@ -1,0 +1,55 @@
+services:
+  go:
+    container_name: estimation-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 1323:1323
+    volumes:
+      - ./:/app
+    environment:
+      - GO111MODULE=on
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:15
+    container_name: estimation-db
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    volumes:
+      - db-store:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    ports:
+      - 9999:80
+    volumes:
+      - pgadmin-data:/app/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=example@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    depends_on:
+      - db
+    env_file:
+      - .env
+volumes:
+  db-store:
+  pgadmin-data:
