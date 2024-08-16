@@ -4,30 +4,22 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
+	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/config"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-func RunMigrations() {
-	// 環境変数の読み込み
-	dbUser := os.Getenv("POSTGRES_USER")
-	dbPassword := os.Getenv("POSTGRES_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("POSTGRES_DB")
-	dbSSLMode := os.Getenv("DB_SSLMODE")
-
+func RunMigrations(cfg config.Config) {
 	// 環境変数のデバッグ出力
 	log.Printf("DB_USER: %s, DB_PASSWORD: %s, DB_HOST: %s, DB_PORT: %s, DB_NAME: %s, DB_SSLMODE: %s",
-		dbUser, dbPassword, dbHost, dbPort, dbName, dbSSLMode)
+		cfg.Database.User, cfg.Database.Password, cfg.Database.Host, cfg.Database.Port, cfg.Database.DBName, cfg.Database.SSLMode)
 
 	// DSNの作成
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
-		dbUser, dbPassword, dbHost, dbPort, dbName, dbSSLMode)
+		cfg.Database.User, cfg.Database.Password, cfg.Database.Host, cfg.Database.Port, cfg.Database.DBName, cfg.Database.SSLMode)
 
 	// リトライロジックの追加
 	var m *migrate.Migrate

@@ -10,7 +10,7 @@ COPY ./go.sum .
 COPY ./.air.toml .
 
 RUN go mod download && \
-    go build -o myapp ./ && \
+    go build -o myapp ./cmd/main && \
     go install github.com/go-delve/delve/cmd/dlv@latest && \
     go install github.com/air-verse/air@latest
 
