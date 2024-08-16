@@ -1,8 +1,9 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/domain"
-	"golang.org/x/net/context"
 )
 
 // Input Boundary <I>
@@ -28,16 +29,13 @@ type SaveRateOutputData struct {
 // Data Access
 type SaveRateInteractor struct {
 	rateRepository IRateCalendarRepository
-	outputPort     ISaveRateOutput
 }
 
 func NewSaveRateInteractor(
 	rateRepository IRateCalendarRepository,
-	outputPort ISaveRateOutput,
 ) ISaveRateInteractor {
 	return &SaveRateInteractor{
 		rateRepository: rateRepository,
-		outputPort:     outputPort,
 	}
 }
 

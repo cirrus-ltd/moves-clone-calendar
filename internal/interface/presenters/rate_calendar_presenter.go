@@ -9,20 +9,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type RateCalendarPresenter struct {
-	saveRateOutput usecase.ISaveRateOutput
+type IPresenter interface {
+	usecase.ISaveRateOutput
+	PresentBadRequest(c echo.Context, message string) error
+	PresentInternalServerError(c echo.Context, err error) error
 }
 
-func NewRateCalendarPresenter(
-	saveRateOutput usecase.ISaveRateOutput,
-) *RateCalendarPresenter {
-	return &RateCalendarPresenter{
-		saveRateOutput: saveRateOutput,
-	}
+type RateCalendarPresenter struct{}
+
+func NewRateCalendarPresenter() *RateCalendarPresenter {
+	return &RateCalendarPresenter{}
 }
 
 func (p *RateCalendarPresenter) SaveRateOutputPresenter(ctx context.Context, output usecase.SaveRateOutputData) error {
-	c, ok := ctx.(echo.Context)
+	c, ok := ctx.Value("echoContext").(echo.Context)
 	if !ok {
 		return errors.New("invalid context type")
 	}
@@ -34,4 +34,24 @@ func (p *RateCalendarPresenter) SaveRateOutputPresenter(ctx context.Context, out
 		}
 	}
 	return c.JSON(http.StatusOK, response)
+}
+
+func (p *RateCalendarPresenter) PresentBadRequest(c echo.Context, message string) error {
+	response := struct {
+		Error string `json:"error"`
+	}{
+		Error: message,
+	}
+
+	return c.JSON(http.StatusBadRequest, response)
+}
+
+func (p *RateCalendarPresenter) PresentInternalServerError(c echo.Context, err error) error {
+	response := struct {
+		Error string `json:"error"`
+	}{
+		Error: err.Error(),
+	}
+
+	return c.JSON(http.StatusInternalServerError, response)
 }
