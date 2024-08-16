@@ -29,7 +29,7 @@ func main() {
 	rateCalendarPresenter := presenters.NewRateCalendarPresenter()
 
 	// インタラクターの初期化
-	saveRateInteractor := usecase.NewSaveRateInteractor(*rateCalendarRepository)
+	saveRateInteractor := usecase.NewSaveRateInteractor(rateCalendarRepository)
 
 	// コントローラーの初期化
 	rateCalendarController := controllers.NewRateCalendarController(saveRateInteractor, rateCalendarPresenter)

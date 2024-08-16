@@ -7,10 +7,10 @@ import (
 )
 
 type Database struct {
-	User     string `env:"DB_USER"`
-	DBName   string `env:"DB_NAME"`
+	User     string `env:"POSTGRES_USER"`
+	DBName   string `env:"POSTGRES_DB"`
 	SSLMode  string `env:"DB_SSLMODE"`
-	Password string `env:"DB_PASSWORD"`
+	Password string `env:"POSTGRES_PASSWORD"`
 	Host     string `env:"DB_HOST"`
 	Port     string `env:"DB_PORT"`
 }
