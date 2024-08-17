@@ -1,15 +1,17 @@
+# .air.toml
+
 root = "."
 tmp_dir = "tmp"
 
 [build]
   # コマンド実行ディレクトリを指定
-  cmd = "go build -o ./tmp/main ./"
+  cmd = "go build -o ./tmp/main ./cmd/main"
   # 実行ファイルのパス
   bin = "./tmp/main"
   # ビルドの遅延時間（ミリ秒）
   delay = 1000
   # ビルド対象のディレクトリ
-  include_dir = ["./"]
+  include_dir = ["./cmd", "./internal"]
   # ビルド対象のファイル拡張子
   include_ext = ["go", "tpl", "tmpl", "html"]
   # ビルドから除外するディレクトリ
@@ -17,7 +19,7 @@ tmp_dir = "tmp"
   # ビルドから除外するファイルパターン
   exclude_regex = ["_test.go"]
   # ビルドエラー時のログファイル
-  log = "build-errors.log"
+  log = "tmp/build-errors.log"
 
 [color]
   # 各種ログの色設定
@@ -28,7 +30,16 @@ tmp_dir = "tmp"
 
 [log]
   # ログの設定
+  level = "debug"
+  color = true
+  timestamp = true
   time = true
+
+[serve]
+  cmd = "./tmp/main"
+  grace = 2000
+  kill_signal = "SIGTERM"
+  watch_delay = 200
 
 [misc]
   # ビルド時に画面をクリアするかどうか
