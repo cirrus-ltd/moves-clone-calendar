@@ -4,7 +4,7 @@ import "time"
 
 type RateCalendar struct {
 	ID        time.Time `gorm:"primaryKey;type:date" json:"id"`
-	Version   string    `json:"version"`
+	Version   int       `json:"version"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Rate      int       `json:"rate"`

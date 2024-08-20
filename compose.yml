@@ -1,6 +1,6 @@
 services:
   go:
-    container_name: estimation-app
+    container_name: rate-calendar-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -16,9 +16,28 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - app-network
+  migrate:
+    container_name: rate-calendar-migrate
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: go run cmd/cli/main.go migration
+    volumes:
+      - ./:/app
+    environment:
+      - GO111MODULE=on
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
   db:
     image: postgres:15
-    container_name: estimation-db
+    container_name: rate-calendar-db
     expose:
       - 5432
     ports:
@@ -36,6 +55,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
@@ -50,6 +71,12 @@ services:
       - db
     env_file:
       - .env
+    networks:
+      - app-network
 volumes:
   db-store:
   pgadmin-data:
+
+networks:
+  app-network:
+    driver: bridge

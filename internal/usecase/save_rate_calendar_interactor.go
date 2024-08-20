@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log"
 
 	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/domain"
 )
@@ -18,7 +19,7 @@ type ISaveRateOutput interface {
 
 // Input Data <DS>
 type SaveRateInputData struct {
-	DateRate map[string]int
+	DateRate map[string]int `json:"data_rate"`
 }
 
 // Output Data <DS>
@@ -48,6 +49,7 @@ func (i *SaveRateInteractor) Execute(input SaveRateInputData) (SaveRateOutputDat
 		}
 		rateCalendars = append(rateCalendars, *rateCalendar)
 	}
+	log.Printf("rateCalendars: %+v", rateCalendars)
 
 	err := i.rateRepository.Save(rateCalendars)
 	if err != nil {

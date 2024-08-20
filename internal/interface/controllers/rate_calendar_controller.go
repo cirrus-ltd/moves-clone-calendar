@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/interface/presenters"
@@ -39,11 +40,12 @@ func (rc *RateCalendarController) RateRegister(c echo.Context) error {
 			return rc.presenter.PresentBadRequest(c, "Invalid date format")
 		}
 	}
-
+	log.Printf("Received input: %+v", input.DateRate)
 	output, err := rc.saveRateInteractor.Execute(input)
 	if err != nil {
 		return rc.presenter.PresentInternalServerError(c, err)
 	}
+	// echo。Contextからcontext.Contextに変更してpresenterに渡す
 	ctx := context.WithValue(context.Background(), echoContextKey, c)
 	return rc.presenter.SaveRateOutputPresenter(ctx, output)
 }

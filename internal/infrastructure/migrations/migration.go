@@ -12,7 +12,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-func RunMigrations(cfg config.Config) {
+func RunMigrations(cfg *config.Config) {
 	// 環境変数のデバッグ出力
 	log.Printf("DB_USER: %s, DB_PASSWORD: %s, DB_HOST: %s, DB_PORT: %s, DB_NAME: %s, DB_SSLMODE: %s",
 		cfg.Database.User, cfg.Database.Password, cfg.Database.Host, cfg.Database.Port, cfg.Database.DBName, cfg.Database.SSLMode)
@@ -21,12 +21,13 @@ func RunMigrations(cfg config.Config) {
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
 		cfg.Database.User, cfg.Database.Password, cfg.Database.Host, cfg.Database.Port, cfg.Database.DBName, cfg.Database.SSLMode)
 
+	log.Printf("DSN: %s", dsn)
 	// リトライロジックの追加
 	var m *migrate.Migrate
 	var err error
 	for i := 0; i < 10; i++ {
 		m, err = migrate.New(
-			"file://migrations",
+			"file://internal/infrastructure/migrations",
 			dsn)
 		if err == nil {
 			break

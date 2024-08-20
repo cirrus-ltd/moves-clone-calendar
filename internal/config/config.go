@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/caarlos0/env/v10"
+	"github.com/joho/godotenv"
 )
 
 type Database struct {
@@ -24,10 +25,23 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, error) {
-	var cfg *Config
-	if err := env.Parse(&cfg); err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Printf("Error loading .env file: %v", err)
 		return nil, err
 	}
+
+	cfg := &Config{}
+	if err := env.Parse(&cfg.Database); err != nil {
+		log.Printf("Error loading database config: %v", err)
+		return nil, err
+	}
+	if err := env.Parse(&cfg.Server); err != nil {
+		log.Printf("Error loading server config: %v", err)
+		return nil, err
+	}
+
+	// デバッグ出力
+	log.Printf("Loaded config: %+v", cfg)
+
 	return cfg, nil
 }

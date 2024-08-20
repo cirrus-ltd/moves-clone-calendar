@@ -9,9 +9,6 @@ GOGET=$(GOCMD) get
 BINARY_NAME=myapp
 BINARY_UNIX=$(BINARY_NAME)_unix
 
-# マイグレーションのパラメータ
-MIGRATE_CMD=go run cmd/cli/main.go
-
 # Docker Composeのパラメータ
 DOCKER_COMPOSE=docker compose
 
@@ -34,7 +31,7 @@ test:
 
 # マイグレーションの実行
 migrate:
-	$(MIGRATE_CMD)
+	$(DOCKER_COMPOSE) run --rm migrate
 
 # アプリケーションの実行
 run:
@@ -53,10 +50,10 @@ docker-up:
 	$(DOCKER_COMPOSE) up -d
 
 docker-down:
-	$(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) down --rmi all --volumes --remove-orphans
 
 docker-build:
-	$(DOCKER_COMPOSE) build
+	$(DOCKER_COMPOSE) build --no-cache
 
 docker-restart:
 	$(DOCKER_COMPOSE) restart
@@ -66,3 +63,8 @@ docker-logs:
 
 docker-ps:
 	$(DOCKER_COMPOSE) ps
+
+docker-reset:
+	$(DOCKER_COMPOSE) down --rmi all --volumes --remove-orphans
+	$(DOCKER_COMPOSE) build --no-cache
+	$(DOCKER_COMPOSE) up -d

@@ -21,7 +21,7 @@ func (r *RateCalendarRepository) Save(rateCalendars []domain.RateCalendar) error
 		modelRateCalendars = append(modelRateCalendars, model.RateCalendar{
 			ID:      rateCalendar.ID(),
 			Rate:    rateCalendar.Rate(),
-			Version: "1.0",
+			Version: 1,
 		})
 	}
 	// 複数のレコードを一度に登録し、主キーが重複している場合は上書き
