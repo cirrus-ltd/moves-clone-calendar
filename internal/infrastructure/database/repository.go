@@ -1,6 +1,8 @@
 package database
 
 import (
+	"log"
+
 	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/domain"
 	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/infrastructure/model"
 	"gorm.io/gorm"
@@ -28,6 +30,7 @@ func (r *RateCalendarRepository) Save(rateCalendars []domain.RateCalendar) error
 	if err := r.db.Clauses(clause.OnConflict{
 		UpdateAll: true,
 	}).Create(&modelRateCalendars).Error; err != nil {
+		log.Printf("Error saving rateCalendars: %v", err)
 		return err
 	}
 	return nil

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"log"
 	"time"
 
@@ -9,10 +8,6 @@ import (
 	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
-
-type contextKey string
-
-const echoContextKey contextKey = "echoContext"
 
 type RateCalendarController struct {
 	saveRateInteractor usecase.ISaveRateInteractor
@@ -43,9 +38,9 @@ func (rc *RateCalendarController) RateRegister(c echo.Context) error {
 	log.Printf("Received input: %+v", input.DateRate)
 	output, err := rc.saveRateInteractor.Execute(input)
 	if err != nil {
+		log.Printf("Error executing interactor: %v", err)
 		return rc.presenter.PresentInternalServerError(c, err)
 	}
-	// echo。Contextからcontext.Contextに変更してpresenterに渡す
-	ctx := context.WithValue(context.Background(), echoContextKey, c)
-	return rc.presenter.SaveRateOutputPresenter(ctx, output)
+
+	return rc.presenter.SaveRateOutputPresenter(c, output)
 }

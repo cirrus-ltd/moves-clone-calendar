@@ -1,8 +1,6 @@
 package presenters
 
 import (
-	"context"
-	"errors"
 	"net/http"
 
 	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/usecase"
@@ -21,11 +19,7 @@ func NewRateCalendarPresenter() *RateCalendarPresenter {
 	return &RateCalendarPresenter{}
 }
 
-func (p *RateCalendarPresenter) SaveRateOutputPresenter(ctx context.Context, output usecase.SaveRateOutputData) error {
-	c, ok := ctx.Value("echoContext").(echo.Context)
-	if !ok {
-		return errors.New("invalid context type")
-	}
+func (p *RateCalendarPresenter) SaveRateOutputPresenter(c echo.Context, output usecase.SaveRateOutputData) error {
 	response := make([]map[string]interface{}, len(output.RateCalendars))
 	for i, rateCalendar := range output.RateCalendars {
 		response[i] = map[string]interface{}{

@@ -1,10 +1,10 @@
 package usecase
 
 import (
-	"context"
 	"log"
 
 	"github.com/Cirrus-Ltd/moves-clone-calendar/internal/domain"
+	"github.com/labstack/echo/v4"
 )
 
 // Input Boundary <I>
@@ -14,7 +14,7 @@ type ISaveRateInteractor interface {
 
 // Output Boundary <I>
 type ISaveRateOutput interface {
-	SaveRateOutputPresenter(ctx context.Context, output SaveRateOutputData) error
+	SaveRateOutputPresenter(c echo.Context, output SaveRateOutputData) error
 }
 
 // Input Data <DS>
